@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">KnownFictionalSpace</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="dataloaded">Exploration loaded.</string>
+    <string name="nodata">No exploration found.</string>
+    <string name="launch">Launch map</string>
+
+</resources>
