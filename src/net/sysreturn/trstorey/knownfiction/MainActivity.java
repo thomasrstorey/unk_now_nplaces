@@ -14,7 +14,9 @@ public class MainActivity extends FragmentActivity {
 private GoogleMap map;
 private final String mapTag = "mapTag";
 TiledMap mapFragment;
-
+//TODO check google play services status
+//TODO make location aware
+//TODO decide if generating tileoverlays locally or remotely, then implement
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,6 +37,7 @@ TiledMap mapFragment;
 		fragmentTransaction.addToBackStack(null);
 		fragmentTransaction.commit();
 		map = mapFragment.getMap();
+		//map.setMyLocationEnabled(true);
 	}
 	
 

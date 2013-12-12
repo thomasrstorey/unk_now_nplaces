@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
@@ -20,6 +21,8 @@ public class TiledMap extends SupportMapFragment {
 	private GoogleMap map;
 	SupportMapFragment mapFragment;
 	private GoogleMapOptions options;
+	private MercatorProjection mp;
+	private LatLng test;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -32,6 +35,7 @@ public class TiledMap extends SupportMapFragment {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 		FrameLayout fl = new FrameLayout(inflater.getContext());
 		fl.addView(v);
+		test = new LatLng(41.850033,-87.6500523);
 		return fl;
 	}
 	
@@ -56,7 +60,9 @@ public class TiledMap extends SupportMapFragment {
 			  }
 			};
 			map.addTileOverlay(new TileOverlayOptions().tileProvider(tileProvider));
-			
+			mp = new MercatorProjection(this.getMap(), 256, test);
+			mp.fromLatLngToPoint();
+			mp.printPixelLocation();
 	}
 	
 	private void setUpMapIfNeeded() {
