@@ -51,7 +51,7 @@ public class TiledMap extends SupportMapFragment {
 			  @Override
 			  public synchronized URL getTileUrl(int x, int y, int zoom) {
 			    // Define the URL pattern for the tile images 
-			    String s = "http://i.imgur.com/YO3PHdG.png";
+			    String s = "http://art-tech.arts.ufl.edu/~tstorey/android/tiles/test-overlay.png";
 			    try {
 			      return new URL(s);
 			    } catch (MalformedURLException e) {
