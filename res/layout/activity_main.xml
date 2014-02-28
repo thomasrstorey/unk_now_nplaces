@@ -16,15 +16,61 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
         android:text="@string/nodata" />
+    
+    <EditText
+	    android:id="@+id/serverip"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:hint="@string/ip_hint"
+	    android:layout_marginTop="70dp"
+	    android:inputType="text"
+	    android:imeOptions="actionSend" />
+    
+    <EditText
+	    android:id="@+id/serverport"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:hint="@string/port_hint"
+	    android:layout_marginTop="110dp"
+	    android:inputType="number"
+	    android:imeOptions="actionSend" />
+    
+    <EditText
+	    android:id="@+id/tile_url"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:hint="@string/url_hint"
+	    android:layout_marginTop="150dp"
+	    android:inputType="textUri"
+	    android:imeOptions="actionSend" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/launchbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView1"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="140dp"
         android:text="@string/launch"
-        android:onClick="launchMapFragment" />
+        android:onClick="launchMapFragment"
+        android:enabled="false" />
+    
+    <Button
+        android:id="@+id/connectbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:text="@string/tcp_connect"
+        android:onClick="startTCPService"
+        android:enabled="false" />
+    
+    <CheckBox android:id="@+id/track_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/track_text"
+        android:layout_marginTop="320dp"
+        android:onClick="onCheckboxClicked"/>
 
 </RelativeLayout>

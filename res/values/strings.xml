@@ -5,7 +5,12 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="dataloaded">Exploration loaded.</string>
-    <string name="nodata">No exploration found.</string>
+    <string name="nodata">Enter a server ip and port to send location data to, and specify a root URL from which to download tiles. Launch the map and explore.</string>
     <string name="launch">Launch map</string>
+    <string name="ip_hint">TCP Server IP</string>
+    <string name="port_hint">TCP Server Port</string>
+    <string name="url_hint">Tile Root URL</string>
+    <string name="tcp_connect">Connect to TCP Server</string>
+    <string name="track_text">Enable location tracking.</string>
 
 </resources>
