@@ -7,11 +7,11 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -51,10 +51,13 @@ public class TCPClient {
 		Log.e("TCP", "set mMsgListener");
 		mMsgListener = listener;
 		context = _context;
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-		
-		SERVERIP = settings.getString("ipSetting", "127.0.0.1");
-		SERVERPORT = settings.getInt("portSetting", 80);
+		SharedPreferences settings = context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+		if(settings.contains("ipSettings")){
+			SERVERIP = settings.getString("ipSettings", "127.0.0.1");
+		} else{
+			Log.w("TCP", "FOR SOME REASON IT DOESN'T EXIST");
+		}
+		SERVERPORT = settings.getInt("portSettings", 80);
 		Log.e("TCP", "ip = " + SERVERIP + " port = " + SERVERPORT);
 	}
 	

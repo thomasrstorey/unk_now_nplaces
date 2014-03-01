@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class TCPServiceManager extends BroadcastReceiver {
@@ -18,7 +17,7 @@ public class TCPServiceManager extends BroadcastReceiver {
 			// Make sure we are getting the right intent
 			if( "net.sysreturn.trstorey.knownfiction.servicebroadcast".equals(intent.getAction())) {
 				Log.w(TAG, "received intent");
-				mPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+				mPrefs = context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
 		        boolean mUpdatesRequested = mPrefs.getBoolean("updatesSetting", false);
 		        if(mUpdatesRequested){
 		        	Log.e(TAG, "Starting service");

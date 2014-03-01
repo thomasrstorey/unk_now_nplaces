@@ -1,6 +1,7 @@
 package net.sysreturn.trstorey.knownfiction;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -85,7 +86,7 @@ private boolean portSet;
 		//restore prefs, if they exist
 		ipSet = false;
 		portSet = false;
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences settings = getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
 		serverIP = (EditText)findViewById(R.id.serverip);
 		serverPort = (EditText)findViewById(R.id.serverport);
 		tileURL = (EditText)findViewById(R.id.tile_url);
@@ -107,19 +108,19 @@ private boolean portSet;
 		serverPort.setOnEditorActionListener(oeal);
 		tileURL.setOnEditorActionListener(oeal);
 		
-		if(settings.contains("ipSetting")){
+		if(settings.contains("ipSettings")){
 			Log.w("TCP", "used old ipSetting");
-			serverIP.setText(settings.getString("ipSetting", getString(R.string.ip_hint)));
+			serverIP.setText(settings.getString("ipSettings", getString(R.string.ip_hint)));
 			ipSet = true;
 		}
-		if(settings.contains("portSetting")){
+		if(settings.contains("portSettings")){
 			Log.w("TCP", "used old portSetting");
-			serverPort.setText(settings.getInt("portSetting", 0));
+			serverPort.setText(Integer.toString(settings.getInt("portSettings", 0)));
 			portSet = true;
 		}
-		if(settings.contains("urlSetting")){
+		if(settings.contains("urlSettings")){
 			Log.w("TCP", "used old urlSetting");
-			tileURL.setText(settings.getString("urlSetting", getString(R.string.ip_hint)));
+			tileURL.setText(settings.getString("urlSettings", getString(R.string.url_hint)));
 		}
 		if(settings.contains("updatesSetting")){
 			Log.w("TCP", "used old updatesSetting");
@@ -130,7 +131,7 @@ private boolean portSet;
 	
 	void fillSharedPreferences(int id){
 		Log.w("TCP","setting preferences");
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
 		SharedPreferences.Editor editor = settings.edit();
 		if(id == R.id.serverip){
 			Log.w("TCP","set ip prefs");
@@ -157,7 +158,11 @@ private boolean portSet;
 			connect.setEnabled(true);
 		}
 		editor.commit();
+		if(settings.contains("ipSettings")){
 		Log.w("TCP", settings.getString("ipSettings", "127.0.0.1"));
+		} else{
+			Log.w("TCP", "FOR SOME REASON IT DOESN'T EXIST");
+		}
 		int i = settings.getInt("portSettings", 80);
 		Log.w("TCP", Integer.toString(i));
 	}
@@ -176,7 +181,7 @@ private boolean portSet;
 			//intent.setAction("net.sysreturn.trstorey.knownfiction.servicebroadcast");
 			//sendBroadcast(intent);
 			Log.w("TCP", "checked");
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("updatesSetting", true);
 			editor.commit();
@@ -185,7 +190,7 @@ private boolean portSet;
 			Log.w("TCP", "unchecked");
 			ComponentName comp = new ComponentName(getPackageName(), TCPService.class.getName());
 			stopService(new Intent().setComponent(comp));
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("updatesSetting", false);
 			editor.commit();
@@ -207,7 +212,14 @@ private boolean portSet;
 	
 	public void launchMapFragment(View view){
 		
-		if(servicesConnected()){
+		locationClient = new LocationClient(this, this, this);
+		locationRequest = LocationRequest.create();
+		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		locationRequest.setInterval(UPDATE_INTERVAL);
+		locationRequest.setFastestInterval(FASTEST_INTERVAL);
+		locationClient.connect();
+		
+		/*if(servicesConnected()){
 			currentLocation = locationClient.getLastLocation();
 			if(updatesRequested){
 			}
@@ -220,19 +232,19 @@ private boolean portSet;
 		fragmentTransaction.commit();
 		map = mapFragment.getMap();
 		currentLocation = locationClient.getLastLocation();
-		locationClient.requestLocationUpdates(locationRequest, this);
+		locationClient.requestLocationUpdates(locationRequest, this);*/
 		
 	}
 	
 	public void startTCPService(View view){
 		
 		
-		locationClient = new LocationClient(this, this, this);
+		/*locationClient = new LocationClient(this, this, this);
 		locationRequest = LocationRequest.create();
 		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 		locationRequest.setInterval(UPDATE_INTERVAL);
 		locationRequest.setFastestInterval(FASTEST_INTERVAL);
-		locationClient.connect();
+		locationClient.connect();*/
 		
 		Intent intent = new Intent();
 		intent.setAction("net.sysreturn.trstorey.knownfiction.servicebroadcast");
@@ -314,7 +326,20 @@ private boolean portSet;
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-		
+		if(servicesConnected()){
+			currentLocation = locationClient.getLastLocation();
+			if(updatesRequested){
+			}
+		}
+			
+		mapFragment = new TiledMap();
+		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+		fragmentTransaction.add(android.R.id.content, mapFragment, mapTag);
+		fragmentTransaction.addToBackStack(null);
+		fragmentTransaction.commit();
+		map = mapFragment.getMap();
+		currentLocation = locationClient.getLastLocation();
+		locationClient.requestLocationUpdates(locationRequest, this);
 	}
 
 	@Override

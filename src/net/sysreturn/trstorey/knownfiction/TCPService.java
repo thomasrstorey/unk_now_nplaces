@@ -103,7 +103,7 @@ GooglePlayServicesClient.OnConnectionFailedListener,
 		 
         @Override
         protected TCPClient doInBackground(TCPService... contexts) {
- 
+        	Log.w("TCP", "make TCPClient");
             //we create a TCPClient object and
             tcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
                 @Override
@@ -135,9 +135,13 @@ private boolean servicesConnected() {
 	public int onStartCommand (Intent intent, int flags, int startId)
 	{
 	    super.onStartCommand(intent, flags, startId);
-	    
-	    if(!servicesAvailable || locationClient.isConnected() || mInProgress)
+	    Log.w("TCP", "servicesAvailable??? " + servicesAvailable);
+	    Log.w("TCP", "location client is connected??? " + locationClient.isConnected());
+	    Log.w("TCP", "in progress??? " + mInProgress);
+	    if(!servicesAvailable || locationClient.isConnected() || mInProgress){
+	    	Log.w("TCP", "first one and out");
 	    	return START_STICKY;
+	    }
 	    
 	    setUpLocationClientIfNeeded();
 	    if(!locationClient.isConnected() || !locationClient.isConnecting() && !mInProgress)
@@ -187,7 +191,7 @@ private boolean servicesConnected() {
         } else{
         	Log.w("TCP Client", "tcpclient is null");
         }
-        Log.d("debug", msg);
+        //Log.d("debug", msg);
         // Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
     

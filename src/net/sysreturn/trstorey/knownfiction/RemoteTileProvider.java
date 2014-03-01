@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.UrlTileProvider;
 
@@ -15,14 +15,16 @@ Context context;
 	public RemoteTileProvider(Context _context){
 		super(256,256);
 		context = _context;
+		SharedPreferences settings = context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+		Log.w("TCP", "url settings: " + settings.getString("urlSettings", "DNE"));
 	}
 	public static final String PREFS = "unkn_own-prefsFile";
 	
 
 	@Override
 	public URL getTileUrl(int x, int y, int zoom) {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-		String root = settings.getString("tileURL", null); // http://art-tech.arts.ufl.edu/~tstorey/unkn_own/tiles
+		SharedPreferences settings = context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_MULTI_PROCESS);
+		String root = settings.getString("urlSettings", null); // http://art-tech.arts.ufl.edu/~tstorey/unkn_own/tiles
 		String s = String.format(Locale.US, root + "/%d/%d/%d/%d_%d.png", zoom, x, y, x, y);
 	    try {
 	      URL url = new URL(s);
