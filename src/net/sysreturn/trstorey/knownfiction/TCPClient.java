@@ -78,16 +78,11 @@ public class TCPClient {
 		mRun = true;
 		String serverMsg = null;
 		try{
-			//InetAddress serverAddr = InetAddress.getByName(SERVERIP);
-			
-			
-			//Socket socket = new Socket(serverAddr, SERVERPORT);
 			Socket socket = new Socket();
 			socket.connect(new InetSocketAddress(SERVERIP, SERVERPORT), 10000);
 			Log.e("TCP Client", "Connecting");
 			
 
-					//Toast.makeText(context, "Connecting to TCP Server", Toast.LENGTH_SHORT).show();
 					 msg = handler.obtainMessage();
 				     msg.arg1 = 1;
 				     handler.sendMessage(msg);
@@ -108,14 +103,14 @@ public class TCPClient {
 			     handler.sendMessage(msg);
 				
 				while(mRun){
-					serverMsg = in.readLine();
+					/*serverMsg = in.readLine();
 					Log.w("TCP", "serverMsg = " + serverMsg);
 					if(serverMsg != null && mMsgListener != null){
 						mMsgListener.messageReceived(serverMsg);
 					}
-					serverMsg = null;
+					serverMsg = null;*/
 				}
-					Log.e("Response", "Received Message: " + serverMsg);
+					//Log.e("Response", "Received Message: " + serverMsg);
 			} catch (Exception e) {
 				 
 	            Log.e("TCP", "S: Error", e);
@@ -127,7 +122,7 @@ public class TCPClient {
 	            socket.close();
 	            Log.e("TCP", "Disconnected from TCP Server");
 						//Toast.makeText(context, "Disconnected from TCP Server", Toast.LENGTH_SHORT).show();
-	            msg = handler.obtainMessage();
+	             msg = handler.obtainMessage();
 			     msg.arg1 = 3;
 			     handler.sendMessage(msg);
 	        }

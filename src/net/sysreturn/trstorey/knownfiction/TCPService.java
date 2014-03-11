@@ -199,6 +199,15 @@ private boolean servicesConnected() {
     public void onDestroy(){
         // Turn off the request flag
         mInProgress = false;
+        if(tcpClient != null){
+        tcpClient.stopClient();
+        }
+        if (Context.NOTIFICATION_SERVICE!=null) {
+        	int NOTIFICATION_ID = 12345;
+            String ns = Context.NOTIFICATION_SERVICE;
+            NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
+            nMgr.cancel(NOTIFICATION_ID);
+        }
         if(servicesAvailable && locationClient != null) {
 	        locationClient.removeLocationUpdates(this);
 	        // Destroy the current location client

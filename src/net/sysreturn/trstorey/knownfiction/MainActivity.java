@@ -7,7 +7,6 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -64,6 +63,7 @@ LocationRequest locationRequest;
 boolean updatesRequested;
 public static final String PREFS = "unkn_own-prefsFile";
 EditText serverIP, serverPort, tileURL;
+CheckBox updatesRequestedBox;
 private boolean ipSet;
 private boolean portSet;
 
@@ -71,17 +71,6 @@ private boolean portSet;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		/*updatesRequested = true;
-		locationClient = new LocationClient(this, this, this);
-		locationRequest = LocationRequest.create();
-		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-		locationRequest.setInterval(UPDATE_INTERVAL);
-		locationRequest.setFastestInterval(FASTEST_INTERVAL);
-		locationClient.connect();
-		
-		Intent intent = new Intent();
-		intent.setAction("net.sysreturn.trstorey.knownfiction.servicebroadcast");
-		sendBroadcast(intent);*/
 		
 		//restore prefs, if they exist
 		ipSet = false;
@@ -90,6 +79,7 @@ private boolean portSet;
 		serverIP = (EditText)findViewById(R.id.serverip);
 		serverPort = (EditText)findViewById(R.id.serverport);
 		tileURL = (EditText)findViewById(R.id.tile_url);
+		updatesRequestedBox = (CheckBox)findViewById(R.id.track_box);
 		
 		OnEditorActionListener oeal = new OnEditorActionListener(){
 			@Override
@@ -121,11 +111,17 @@ private boolean portSet;
 		if(settings.contains("urlSettings")){
 			Log.w("TCP", "used old urlSetting");
 			tileURL.setText(settings.getString("urlSettings", getString(R.string.url_hint)));
+			Button connect = (Button)findViewById(R.id.launchbutton);
+			connect.setEnabled(true);
 		}
 		if(settings.contains("updatesSetting")){
 			Log.w("TCP", "used old updatesSetting");
-			
 			updatesRequested = settings.getBoolean("updatesSetting", false);
+			updatesRequestedBox.setChecked(updatesRequested);
+		}
+		if(portSet && ipSet && updatesRequested){
+			Button launcher = (Button)findViewById(R.id.connectbutton);
+			launcher.setEnabled(true);
 		}
 	}
 	
@@ -185,6 +181,11 @@ private boolean portSet;
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("updatesSetting", true);
 			editor.commit();
+			updatesRequested = true;
+			if(portSet && ipSet && updatesRequested){
+				Button launcher = (Button)findViewById(R.id.connectbutton);
+				launcher.setEnabled(true);
+			}
 		}
 		else if(!checked){
 			Log.w("TCP", "unchecked");
@@ -194,6 +195,9 @@ private boolean portSet;
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("updatesSetting", false);
 			editor.commit();
+			updatesRequested = false;
+			Button launcher = (Button)findViewById(R.id.connectbutton);
+			launcher.setEnabled(false);
 		}
 		
 	}
@@ -201,13 +205,6 @@ private boolean portSet;
 	@Override
 	protected void onStart(){
 		super.onStart();
-		/*locationClient = new LocationClient(this, this, this);
-		locationRequest = LocationRequest.create();
-		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-		locationRequest.setInterval(UPDATE_INTERVAL);
-		locationRequest.setFastestInterval(FASTEST_INTERVAL);
-		updatesRequested = true;
-		locationClient.connect();*/
 	}
 	
 	public void launchMapFragment(View view){
@@ -219,33 +216,9 @@ private boolean portSet;
 		locationRequest.setFastestInterval(FASTEST_INTERVAL);
 		locationClient.connect();
 		
-		/*if(servicesConnected()){
-			currentLocation = locationClient.getLastLocation();
-			if(updatesRequested){
-			}
-		}
-			
-		mapFragment = new TiledMap();
-		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-		fragmentTransaction.add(android.R.id.content, mapFragment, mapTag);
-		fragmentTransaction.addToBackStack(null);
-		fragmentTransaction.commit();
-		map = mapFragment.getMap();
-		currentLocation = locationClient.getLastLocation();
-		locationClient.requestLocationUpdates(locationRequest, this);*/
-		
 	}
 	
 	public void startTCPService(View view){
-		
-		
-		/*locationClient = new LocationClient(this, this, this);
-		locationRequest = LocationRequest.create();
-		locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-		locationRequest.setInterval(UPDATE_INTERVAL);
-		locationRequest.setFastestInterval(FASTEST_INTERVAL);
-		locationClient.connect();*/
-		
 		Intent intent = new Intent();
 		intent.setAction("net.sysreturn.trstorey.knownfiction.servicebroadcast");
 		sendBroadcast(intent);
@@ -333,6 +306,7 @@ private boolean portSet;
 		}
 			
 		mapFragment = new TiledMap();
+		Log.w("TCP Client", "returned from onCreate");
 		FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
 		fragmentTransaction.add(android.R.id.content, mapFragment, mapTag);
 		fragmentTransaction.addToBackStack(null);
@@ -340,6 +314,7 @@ private boolean portSet;
 		map = mapFragment.getMap();
 		currentLocation = locationClient.getLastLocation();
 		locationClient.requestLocationUpdates(locationRequest, this);
+		Log.w("TCP Client", "Finished on connected");
 	}
 
 	@Override

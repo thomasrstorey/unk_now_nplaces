@@ -34,6 +34,7 @@ public class TiledMap extends SupportMapFragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+		Log.w("TCP Client", "we actually manage to launch the fragment, but something bad happens later");
 		options = new GoogleMapOptions();
 		options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
 	    .compassEnabled(false)
@@ -45,6 +46,7 @@ public class TiledMap extends SupportMapFragment {
 		fl.addView(v);
 		test = new LatLng(41.850033,-87.6500523);
 		mAssets = this.getActivity().getAssets();
+		Log.w("TCP Client", "got all the way to the end of onCreate at least");
 		return fl;
 	}
 	
